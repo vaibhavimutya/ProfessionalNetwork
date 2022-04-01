@@ -1,0 +1,16 @@
+create sequence msgid_seq start with 30000;
+create language plpgsql;
+create or replace function def()
+returns "trigger" as
+$BODY$
+begin
+NEW.msgId := nextval('msgid_seq');
+return NEW;
+end;
+$BODY$
+language plpgsql volatile;
+
+create trigger message_id before insert
+on Message for each row
+execute procedure def();
+                     
